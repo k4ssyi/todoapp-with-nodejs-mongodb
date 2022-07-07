@@ -5,6 +5,7 @@ const connectDB = require("./db/connect");
 require("dotenv").config();
 
 app.use(express.json()); // json形式を元にexpressを使う
+app.use(express.static("./public")); // public/index.html
 
 const PORT = 5000;
 
