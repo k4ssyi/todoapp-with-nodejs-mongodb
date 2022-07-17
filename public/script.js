@@ -1,6 +1,7 @@
 const tasksDOM = document.querySelector(".tasks");
 const formDOM = document.querySelector(".task-form");
 const taskInputDOM = document.querySelector(".task-input");
+const formAlertDOM = document.querySelector(".form-alert");
 
 // /api/v1/tasksからタスクを読み込む
 const showTasks = async () => {
@@ -18,7 +19,7 @@ const showTasks = async () => {
     const allTasks = tasks.map((task) => {
       const { completed, _id, name } = task; // まとめて取り出せる
       return `<div class="single-task">
-        <h5>
+        <h5 data-id="${name}">
           <span><i class="far fa-check-circle"></i></span>${name}
         </h5>
         <div class="task-links">
@@ -52,9 +53,17 @@ formDOM.addEventListener("submit", async (event) => {
     await axios.post("/api/v1/tasks", { name: name });
     showTasks();
     taskInputDOM.value = ""; // 入力したデータをリセット
+    formAlertDOM.style.display = "block";
+    formAlertDOM.textContent = "タスクを追加しました。";
+    formAlertDOM.classList.add("text-success");
   } catch (err) {
-    console.log(err);
+    formAlertDOM.style.display = "block";
+    formAlertDOM.innerHTML = "無効です。もう一度やり直して下さい。";
   }
+  setTimeout(() => {
+    formAlertDOM.style.display = "none";
+    formAlertDOM.classList.remove("text-success");
+  }, 3000);
 });
 
 // タスクを削除する
@@ -66,8 +75,16 @@ tasksDOM.addEventListener("click", async (event) => {
     try {
       axios.delete(`/api/v1/tasks/${id}`);
       showTasks();
+      formAlertDOM.style.display = "block";
+      formAlertDOM.textContent = `${id} タスクを削除しました。`;
+      formAlertDOM.classList.add("text-success");
     } catch (err) {
-      console.log(err);
+      formAlertDOM.style.display = "block";
+      formAlertDOM.innerHTML = "無効です。もう一度やり直して下さい。";
     }
+    setTimeout(() => {
+      formAlertDOM.style.display = "none";
+      formAlertDOM.classList.remove("text-success");
+    }, 3000);
   }
 });
