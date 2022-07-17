@@ -8,6 +8,12 @@ const showTasks = async () => {
     // 自作のAPIを叩く
     const { data: tasks } = await axios.get("/api/v1/tasks");
 
+    // タスクが1つもないとき
+    if (tasks.length < 1) {
+      tasksDOM.innerHTML = `<h5 class="empty-list">タスクがありません</h5>`;
+      return;
+    }
+
     // タスクを出力
     const allTasks = tasks.map((task) => {
       const { completed, _id, name } = task; // まとめて取り出せる
